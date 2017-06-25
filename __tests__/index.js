@@ -37,7 +37,7 @@ describe('objective-c-parser', () => {
             'This is the comment of basic method one'
         );
 
-        expect(methods[1].name).toBe('basicMethodTwoWithArgOneAndArgTwo');
+        expect(methods[1].name).toBe('basicMethodTwoWithArgOne:AndArgTwo:');
         expect(methods[1].returnType).toBe('NSString');
         expect(methods[1].comment)
             .toBe(`This is the comment of basic method two.

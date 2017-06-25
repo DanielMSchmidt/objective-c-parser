@@ -57,7 +57,7 @@ const parseMethods = file => {
                       (carry, match) => carry.replace(match, ''),
                       methodBody
                   )
-                  .replace(/\W*/g, '')
+                  .replace(/\s*/g, '')
             : methodBody;
 
         const isSingleLineComment = lines[lineIndex - 1].indexOf('//') != -1;
