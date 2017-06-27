@@ -15,8 +15,10 @@ $ npm install objective-c-parser
 ```js
 const fs = require('fs');
 const objectiveCParser = require('objective-c-parser');
+const content = fs.readFileSync('/path/to/objective-c/Ponies.h')
 
-const output = objectiveCParser('/path/to/objective-c/Ponies.h');
+const output = objectiveCParser(content);
+
 fs.writeFileSync('/path/to/project/ponies.json', output);
 ```
 
