@@ -17,6 +17,7 @@ describe('objective-c-parser', () => {
             expect(methods).toBeInstanceOf(Array);
             expect(methods.length).toBe(2);
 
+            expect(methods[0].args.length).toBe(0);
             expect(methods[0].name).toBe('basicMethodOne');
             expect(methods[0].returnType).toBe('NSInteger');
             expect(methods[0].comment).toBe(
@@ -48,6 +49,13 @@ It has multiple lines`);
         it('should have the right amount of methods', () => {
             const methods = objcToJs(advanced).methods;
             expect(methods.length).toBe(31);
+        });
+
+        it('should parse methods corretctly', () => {
+            const method = objcToJs(advanced).methods[24];
+            expect(method.name).toBe('actionForReplaceText:');
+            expect(method.args[0].type).toBe('NSString *');
+            expect(method.args[0].name).toBe('text');
         });
     });
 });

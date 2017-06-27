@@ -2,6 +2,16 @@
 const fs = require('fs');
 const methodDeclarationRegex = /(?:\+|\-)\s?\(((?:\w|\<|\>)*)\)(?:\w|\s|\:|\(|\)|\*)*;/g;
 
+// Get Groups for matches
+function getNthGroupForMatch(string, regex, index) {
+    const matches = [];
+    let match;
+    while ((match = regex.exec(string))) {
+        matches.push(match[index]);
+    }
+    return matches;
+}
+
 const parseClassName = file => {
     const nameRegex = /@interface \w*/i;
     const nameRegexLength = 11;
@@ -42,14 +52,25 @@ const parseMethods = file => {
         const methodBody = methodDeclaration
             .replace(returnType[0], '')
             .replace(';', '');
-        const rawArgs = methodBody.match(/\s?\(\w*\)\w*\s?/g);
-        const name = rawArgs
+
+        const argumentsRegex = /\s?\(((?:\w|\s\*)*)\)((?:\w)*)\s?/g;
+        const rawArgs = [
+            getNthGroupForMatch(methodBody, argumentsRegex, 1),
+            getNthGroupForMatch(methodBody, argumentsRegex, 2),
+        ];
+
+        // XXX: Redo this with splitted type and name of arg
+        const name = rawArgs[0].length
             ? rawArgs
+                  .reduce((carry, [type, name]) => {
+                      return [...carry, type, name];
+                  }, [])
                   .reduce(
                       (carry, match) => carry.replace(match, ''),
                       methodBody
                   )
                   .replace(/\s*/g, '')
+                  .replace(/\(\)/g, '')
             : methodBody;
 
         const firstMethodLine = methodDeclaration.split('\n')[0];
@@ -62,17 +83,19 @@ const parseMethods = file => {
             ? lines[lineIndex - 1].replace(/\/\/(?:\s)*/, '')
             : extractMultiLineComment(lineIndex, lines);
 
-        const args = (rawArgs || []).map(arg => {
-            return {
-                type: arg.match(/\((\w*)\)/)[1],
-                name: arg.match(/\(\w*\)(\w*)/)[1],
-            };
-        });
+        const [argumentTypes, argumentNames] = rawArgs;
+        // Both should be the same length
+        const args = argumentTypes.length
+            ? argumentTypes.map((type, index) => ({
+                  type,
+                  name: argumentNames[index],
+              }))
+            : [];
 
         return {
-            args: args,
-            comment: comment,
-            name: name,
+            args,
+            comment,
+            name,
             returnType: returnType[1],
         };
     });
