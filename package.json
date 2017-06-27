@@ -1,6 +1,6 @@
 {
   "name": "objective-c-parser",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Get an objective-c header file and translate it to equivalent javascript calls",
   "license": "MIT",
   "repository": "danielmschmidt/objective-c-parser",

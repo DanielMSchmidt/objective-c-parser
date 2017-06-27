@@ -53,23 +53,16 @@ const parseMethods = file => {
             .replace(returnType[0], '')
             .replace(';', '');
 
-        const argumentsRegex = /\s?\(((?:\w|\s\*)*)\)((?:\w)*)\s?/g;
+        const argumentsRegex = /\s?\(((?:\w|\s|\*)*)\)((?:\w)*)\s?/g;
         const rawArgs = [
             getNthGroupForMatch(methodBody, argumentsRegex, 1),
             getNthGroupForMatch(methodBody, argumentsRegex, 2),
         ];
 
-        // XXX: Redo this with splitted type and name of arg
         const name = rawArgs[0].length
-            ? rawArgs
-                  .reduce((carry, [type, name]) => {
-                      return [...carry, type, name];
-                  }, [])
-                  .reduce(
-                      (carry, match) => carry.replace(match, ''),
-                      methodBody
-                  )
-                  .replace(/\s*/g, '')
+            ? methodBody
+                  .replace(argumentsRegex, '')
+                  .replace(/\s/g, '')
                   .replace(/\(\)/g, '')
             : methodBody;
 

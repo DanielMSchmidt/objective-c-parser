@@ -51,11 +51,33 @@ It has multiple lines`);
             expect(methods.length).toBe(31);
         });
 
-        it('should parse methods corretctly', () => {
+        it('should parse methods with pointers corretctly', () => {
             const method = objcToJs(advanced).methods[24];
             expect(method.name).toBe('actionForReplaceText:');
             expect(method.args[0].type).toBe('NSString *');
             expect(method.args[0].name).toBe('text');
+        });
+
+        it('should parse methods with underscores corretctly', () => {
+            const method = objcToJs(advanced).methods[30];
+            expect(method.name).toBe('actionForSnapshot:');
+            expect(method.args[0].type).toBe('out __strong UIImage **');
+            expect(method.args[0].name).toBe('outImage');
+        });
+
+        it('should parse methods with two args correctly', () => {
+            const method = objcToJs(advanced).methods[6];
+            expect(method.name).toBe(
+                'actionForScrollInDirection:amount:xOriginStartPercentage:yOriginStartPercentage:'
+            );
+            expect(method.args[0].type).toBe('GREYDirection');
+            expect(method.args[0].name).toBe('direction');
+            expect(method.args[1].type).toBe('CGFloat');
+            expect(method.args[1].name).toBe('amount');
+            expect(method.args[2].type).toBe('CGFloat');
+            expect(method.args[2].name).toBe('xOriginStartPercentage');
+            expect(method.args[3].type).toBe('CGFloat');
+            expect(method.args[3].name).toBe('yOriginStartPercentage');
         });
     });
 });
