@@ -1,5 +1,6 @@
 'use strict';
 const fs = require('fs');
+const methodDeclarationRegex = /(?:\+|\-)\s?\(((?:\w|\<|\>)*)\)(?:\w|\s|\:|\(|\)|\*)*;/g;
 
 const parseClassName = file => {
     const nameRegex = /@interface \w*/i;
@@ -33,23 +34,14 @@ const extractMultiLineComment = (lineIndex, lines) => {
 
 const parseMethods = file => {
     const lines = file.split('\n');
-    const linesWithMethods = [];
 
-    lines.forEach((line, index) => {
-        if (line.includes('-') && line.includes(';')) {
-            linesWithMethods.push(index);
-        }
-    });
+    return file.match(methodDeclarationRegex).map(methodDeclaration => {
+        const matchReturnType = /(?:\+|\-)\s?\(((?:\w|\<|\>)*)\)/;
+        const returnType = methodDeclaration.match(matchReturnType);
 
-    // in an extra loop because we need to take care
-    // of comments and multi line functions later
-
-    return linesWithMethods.map(lineIndex => {
-        const line = lines[lineIndex];
-        const matchReturnType = /-\s?\((\w*)\)/;
-        const returnType = line.match(matchReturnType);
-
-        const methodBody = line.replace(returnType[0], '').replace(';', '');
+        const methodBody = methodDeclaration
+            .replace(returnType[0], '')
+            .replace(';', '');
         const rawArgs = methodBody.match(/\s?\(\w*\)\w*\s?/g);
         const name = rawArgs
             ? rawArgs
@@ -59,6 +51,11 @@ const parseMethods = file => {
                   )
                   .replace(/\s*/g, '')
             : methodBody;
+
+        const firstMethodLine = methodDeclaration.split('\n')[0];
+        const lineIndex = lines.findIndex(line => {
+            return firstMethodLine === line;
+        });
 
         const isSingleLineComment = lines[lineIndex - 1].indexOf('//') != -1;
         const comment = isSingleLineComment
