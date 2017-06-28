@@ -15,4 +15,7 @@
 
  */
 - (NSString) basicMethodTwoWithArgOne:(NSInteger)argOne AndArgTwo:(NSString)argTwo;
+
+// A static method
++ (NSInteger)basicStaticMethodOne;
 @end

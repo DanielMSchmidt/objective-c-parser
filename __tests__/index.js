@@ -12,10 +12,10 @@ describe('objective-c-parser', () => {
             expect(objcToJs(basic).name).toBe('BasicName');
         });
 
-        it('should return two methods for basic example', () => {
+        it('should return three methods for basic example', () => {
             const methods = objcToJs(basic).methods;
             expect(methods).toBeInstanceOf(Array);
-            expect(methods.length).toBe(2);
+            expect(methods.length).toBe(3);
 
             expect(methods[0].args.length).toBe(0);
             expect(methods[0].name).toBe('basicMethodOne');
@@ -36,6 +36,13 @@ It has multiple lines`);
 
             expect(methods[1].args[1].type).toBe('NSString');
             expect(methods[1].args[1].name).toBe('argTwo');
+        });
+
+        it('should be able to detect static methods', () => {
+            const methods = objcToJs(basic).methods;
+            expect(methods[0].static).toBe(false);
+            expect(methods[1].static).toBe(false);
+            expect(methods[2].static).toBe(true);
         });
     });
 

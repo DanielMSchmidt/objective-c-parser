@@ -86,6 +86,7 @@ const parseMethods = file => {
             : [];
 
         return {
+            static: methodDeclaration.indexOf('+') !== -1,
             args,
             comment,
             name,
