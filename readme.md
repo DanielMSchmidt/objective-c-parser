@@ -1,4 +1,4 @@
-# objective-c-parser [![Build Status](https://travis-ci.org/danielmschmidt/objective-c-parser.svg?branch=master)](https://travis-ci.org/danielmschmidt/objective-c-parser) [![Coverage Status](https://coveralls.io/repos/github/danielmschmidt/objective-c-parser/badge.svg?branch=master)](https://coveralls.io/github/danielmschmidt/objective-c-parser?branch=master)
+# objective-c-parser [![Build Status](https://travis-ci.org/DanielMSchmidt/objective-c-parser.svg?branch=master)](https://travis-ci.org/DanielMSchmidt/objective-c-parser) [![Coverage Status](https://coveralls.io/repos/github/DanielMSchmidt/objective-c-parser/badge.svg?branch=master)](https://coveralls.io/github/DanielMSchmidt/objective-c-parser?branch=master)
 
 > Get an objective-c header file and translate it to equivalent javascript calls
 
