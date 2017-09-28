@@ -86,4 +86,13 @@ It has multiple lines`);
       expect(method.args[3].name).toBe("yOriginStartPercentage");
     });
   });
+
+  describe("noComments", () => {
+    const noComments = loadFile("noComments");
+
+    it("should return every method", () => {
+      const { methods } = objcToJs(noComments);
+      expect(methods.length).toBe(8);
+    });
+  });
 });

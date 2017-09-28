@@ -1,6 +1,6 @@
 "use strict";
 const fs = require("fs");
-const methodDeclarationRegex = /(?:\+|\-)\s?\(((?:\w|\<|\>)*)\)(?:\w|\s|\:|\(|\)|\*)*;/g;
+const methodDeclarationRegex = /(?:\+|\-)\s?\(((?:\w|\<|\>)*)\)(?:\w|\s|\<|\>|\:|\(|\)|\*)*;/g;
 
 // Get Groups for matches
 function getNthGroupForMatch(string, regex, index) {
@@ -22,7 +22,7 @@ const extractMultiLineComment = (lineIndex, lines) => {
   let i = lineIndex;
   const commentLines = [];
 
-  while (true) {
+  while (i > 0) {
     i--;
 
     // is start of multi line string
@@ -40,6 +40,9 @@ const extractMultiLineComment = (lineIndex, lines) => {
       commentLines.unshift(lines[i].replace(/\s*\*\s*/, ""));
     }
   }
+
+  // No comment found
+  return "";
 };
 
 const parseMethods = file => {
