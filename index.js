@@ -56,7 +56,7 @@ const parseMethods = file => {
       .replace(returnType[0], "")
       .replace(";", "");
 
-    const argumentsRegex = /\s?\(((?:\w|\s|\*)*)\)((?:\w)*)\s?/g;
+    const argumentsRegex = /\s?\(((?:\w|\s|\*|\<|\>)*)\)((?:\w)*)\s?/g;
     const rawArgs = [
       getNthGroupForMatch(methodBody, argumentsRegex, 1),
       getNthGroupForMatch(methodBody, argumentsRegex, 2)

@@ -87,12 +87,23 @@ It has multiple lines`);
     });
   });
 
-  describe("noComments", () => {
+  describe("edge cases", () => {
     const noComments = loadFile("noComments");
 
     it("should return every method", () => {
       const { methods } = objcToJs(noComments);
       expect(methods.length).toBe(8);
+    });
+
+    it("should find the arguments even with type casts", () => {
+      const { methods } = objcToJs(noComments);
+      const methodWithArgument = methods[1];
+      expect(methodWithArgument.name).toBe(
+        "detoxMatcherForScrollChildOfMatcher:"
+      );
+      expect(methodWithArgument.args.length).toBe(1);
+      expect(methodWithArgument.args[0].type).toBe("id<GREYMatcher>");
+      expect(methodWithArgument.args[0].name).toBe("matcher");
     });
   });
 });
