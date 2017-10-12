@@ -41,12 +41,12 @@
     "parser"
   ],
   "devDependencies": {
-    "coveralls": "^2.11.12",
+    "coveralls": "^3.0.0",
     "husky": "0.14.3",
     "jest": "^21.2.1",
     "lint-staged": "4.2.3",
     "nyc": "^11.2.1",
-    "prettier": "1.7.2"
+    "prettier": "1.7.4"
   },
   "nyc": {
     "reporter": [
