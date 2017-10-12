@@ -1,0 +1,10 @@
+exclude:
+- /__tests__/index.js
+- /exampleFiles/.*
+component_depth: 1
+languages:
+- javascript
+- objectivec
+test:
+    include:
+	- /__tests__/index.js
