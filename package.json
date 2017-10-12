@@ -41,7 +41,7 @@
     "parser"
   ],
   "devDependencies": {
-    "coveralls": "^2.11.12",
+    "coveralls": "^3.0.0",
     "husky": "0.14.3",
     "jest": "^21.2.1",
     "lint-staged": "4.2.3",
