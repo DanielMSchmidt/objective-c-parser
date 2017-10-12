@@ -1,8 +1,7 @@
 {
   "name": "objective-c-parser",
   "version": "1.1.1",
-  "description":
-    "Get an objective-c header file and translate it to equivalent javascript calls",
+  "description": "Get an objective-c header file and translate it to equivalent javascript calls",
   "license": "MIT",
   "repository": "danielmschmidt/objective-c-parser",
   "scripts": {
@@ -10,7 +9,10 @@
     "test": "jest"
   },
   "lint-staged": {
-    "*.{js,json,css}": ["prettier --write", "git add"]
+    "*.{js,json,css}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "author": {
     "name": "Daniel Schmidt",
@@ -31,17 +33,25 @@
       }
     }
   },
-  "files": ["index.js"],
-  "keywords": ["objective-c", "parser"],
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "objective-c",
+    "parser"
+  ],
   "devDependencies": {
     "coveralls": "^2.11.12",
     "husky": "0.14.3",
-    "jest": "^20.0.4",
+    "jest": "^21.2.1",
     "lint-staged": "4.2.3",
     "nyc": "^10.0.0",
     "prettier": "1.7.2"
   },
   "nyc": {
-    "reporter": ["lcov", "text"]
+    "reporter": [
+      "lcov",
+      "text"
+    ]
   }
 }
