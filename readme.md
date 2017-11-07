@@ -2,24 +2,22 @@
 
 > Get an objective-c header file and translate it to equivalent javascript calls
 
-
 ## Install
 
 ```
 $ npm install objective-c-parser
 ```
 
-
 ## Usage
 
 ```js
-const fs = require('fs');
-const objectiveCParser = require('objective-c-parser');
-const content = fs.readFileSync('/path/to/objective-c/Ponies.h')
+const fs = require("fs");
+const objectiveCParser = require("objective-c-parser");
+const content = fs.readFileSync("/path/to/objective-c/Ponies.h");
 
 const output = objectiveCParser(content);
 
-fs.writeFileSync('/path/to/project/ponies.json', output);
+fs.writeFileSync("/path/to/project/ponies.json", output);
 ```
 
 ## Example
@@ -65,7 +63,8 @@ fs.writeFileSync('/path/to/project/ponies.json', output);
           "name": "argTwo"
         }
       ],
-      "comment": "This is the comment of basic method two.\nIt has multiple lines",
+      "comment":
+        "This is the comment of basic method two.\nIt has multiple lines",
       "name": "basicMethodTwoWithArgOneAndArgTwo",
       "returnType": "NSString"
     }
