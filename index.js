@@ -66,7 +66,8 @@ const parseMethods = file => {
 					.replace(argumentsRegex, "")
 					.replace(/\s/g, "")
 					.replace(/\(\)/g, "")
-			: methodBody;
+					.replace(/\{/g, "")
+			: methodBody.replace(/\s*\{/g, "");
 
 		const firstMethodLine = methodDeclaration.split("\n")[0];
 		const lineIndex = lines.findIndex(line => {

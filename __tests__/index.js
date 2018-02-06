@@ -113,6 +113,24 @@ It has multiple lines`);
 		it("should return every method", () => {
 			const { methods } = objcToJs(withImplementation);
 			expect(methods.length).toBe(14); // actually 17, but we don't need the last 3 regex is hard
+			expect(methods.map(m => m.name)).toEqual(
+				expect.arrayContaining([
+					"initWithElementMatcher:",
+					"inRoot:",
+					"atIndex:",
+					"rootElementProvider",
+					"performAction:",
+					"performAction:error:",
+					"assert:",
+					"assert:error:",
+					"assertWithMatcher:",
+					"assertWithMatcher:error:",
+					"usingSearchAction:onElementWithMatcher:",
+					"grey_uniqueElementInMatchedElements:andError:",
+					"grey_handleFailureOfAction:actionError:userProvidedOutError:",
+					"grey_handleFailureOfAssertion:assertionError:userProvidedOutError:"
+				])
+			);
 		});
 	});
 });
