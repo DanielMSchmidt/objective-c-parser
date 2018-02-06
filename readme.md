@@ -44,33 +44,35 @@ fs.writeFileSync("/path/to/project/ponies.json", output);
 
 ```json
 {
-  "name": "BasicName",
-  "methods": [
-    {
-      "args": [],
-      "comment": "This is the comment of basic method one",
-      "name": "basicMethodOne",
-      "returnType": "NSInteger"
-    },
-    {
-      "args": [
-        {
-          "type": "NSInteger",
-          "name": "argOne"
-        },
-        {
-          "type": "NSString",
-          "name": "argTwo"
-        }
-      ],
-      "comment":
-        "This is the comment of basic method two.\nIt has multiple lines",
-      "name": "basicMethodTwoWithArgOneAndArgTwo",
-      "returnType": "NSString"
-    }
-  ]
+	"name": "BasicName",
+	"methods": [
+		{
+			"args": [],
+			"comment": "This is the comment of basic method one",
+			"name": "basicMethodOne",
+			"returnType": "NSInteger"
+		},
+		{
+			"args": [
+				{
+					"type": "NSInteger",
+					"name": "argOne"
+				},
+				{
+					"type": "NSString",
+					"name": "argTwo"
+				}
+			],
+			"comment":
+				"This is the comment of basic method two.\nIt has multiple lines",
+			"name": "basicMethodTwoWithArgOneAndArgTwo",
+			"returnType": "NSString"
+		}
+	]
 }
 ```
+
+Please be aware that `name` can be undefined if the headerfile does not contain an `@interface` declaration.
 
 ## License
 

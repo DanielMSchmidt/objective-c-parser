@@ -133,4 +133,14 @@ It has multiple lines`);
 			);
 		});
 	});
+
+	describe("noClassName", () => {
+		const noClassName = loadFile("noClassName");
+
+		it("should not fail without classname", () => {
+			expect(() => {
+				objcToJs(noClassName);
+			}).not.toThrow();
+		});
+	});
 });

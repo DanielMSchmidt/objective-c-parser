@@ -14,7 +14,7 @@ function getNthGroupForMatch(string, regex, index) {
 const parseClassName = file => {
 	const nameRegex = /@interface \w*/i;
 	const nameRegexLength = 11;
-	return file.match(nameRegex)[0].substr(nameRegexLength);
+	return (file.match(nameRegex) || [""])[0].substr(nameRegexLength);
 };
 
 const extractMultiLineComment = (lineIndex, lines) => {
