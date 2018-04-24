@@ -8,7 +8,7 @@
 	"scripts": {
 		"precommit": "lint-staged",
 		"test": "jest",
-		"fmt": "prettier --write **/*.{js,json,css,md}"
+		"fmt": "prettier --write '{**/,}*.{js,json,css,md}'"
 	},
 	"lint-staged": {
 		"*.{js,json,css,md}": ["prettier --write", "git add"]

@@ -1,5 +1,7 @@
 "use strict";
 const methodDeclarationRegex = /(?:\+|\-)\s?\(((?:\w|\<|\>)*)\)(?:\w|\s|\<|\>|\:|\(|\)|\*)*(;|{)/g;
+const matchReturnType = /(?:\+|\-)\s?\(((?:\w|\<|\>)*)\)/;
+const argumentsRegex = /\s?\(((?:\w|\s|\*|\<|\>)*)\)((?:\w)*)\s?/g;
 
 // Get Groups for matches
 function getNthGroupForMatch(string, regex, index) {
@@ -44,30 +46,42 @@ const extractMultiLineComment = (lineIndex, lines) => {
 	return "";
 };
 
+function extractNameOfMethodWithArguments(methodBody, rawArgs) {
+	const lastArgument = rawArgs[1][rawArgs[1].length - 1];
+	const indexOfLastArgumentEnd =
+		methodBody.indexOf(lastArgument) + lastArgument.length + 1;
+	return methodBody
+		.substr(0, indexOfLastArgumentEnd)
+		.replace(argumentsRegex, "")
+		.replace(/\s/g, "")
+		.replace(/\(\)/g, "")
+		.replace(/\{/g, "");
+}
+
+function extractNameOfMethodWithoutArguments(methodBody, rawArgs) {
+	return methodBody.replace(/\s*\{/g, "");
+}
+
 const parseMethods = file => {
 	const lines = file.split("\n");
 
 	return file.match(methodDeclarationRegex).map(methodDeclaration => {
-		const matchReturnType = /(?:\+|\-)\s?\(((?:\w|\<|\>)*)\)/;
 		const returnType = methodDeclaration.match(matchReturnType);
 
 		const methodBody = methodDeclaration
 			.replace(returnType[0], "")
 			.replace(";", "");
 
-		const argumentsRegex = /\s?\(((?:\w|\s|\*|\<|\>)*)\)((?:\w)*)\s?/g;
 		const rawArgs = [
 			getNthGroupForMatch(methodBody, argumentsRegex, 1),
 			getNthGroupForMatch(methodBody, argumentsRegex, 2)
 		];
 
-		const name = rawArgs[0].length
-			? methodBody
-					.replace(argumentsRegex, "")
-					.replace(/\s/g, "")
-					.replace(/\(\)/g, "")
-					.replace(/\{/g, "")
-			: methodBody.replace(/\s*\{/g, "");
+		const argumentsPresent = Boolean(rawArgs[0].length);
+
+		const name = argumentsPresent
+			? extractNameOfMethodWithArguments(methodBody, rawArgs)
+			: extractNameOfMethodWithoutArguments(methodBody, rawArgs);
 
 		const firstMethodLine = methodDeclaration.split("\n")[0];
 		const lineIndex = lines.findIndex(line => {
@@ -85,7 +99,7 @@ const parseMethods = file => {
 			? argumentTypes.map((type, index) => ({
 					type,
 					name: argumentNames[index]
-				}))
+			  }))
 			: [];
 
 		return {

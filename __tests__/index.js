@@ -143,4 +143,21 @@ It has multiple lines`);
 			}).not.toThrow();
 		});
 	});
+
+	describe("withMacros", () => {
+		const withMacros = loadFile("withMacros");
+
+		it("should not fail with macros", () => {
+			expect(() => {
+				objcToJs(withMacros);
+			}).not.toThrow();
+		});
+
+		it("should not fail with macros", () => {
+			const { methods } = objcToJs(withMacros);
+			expect(methods[0].name).toBe("performAction:error:");
+			expect(methods[0].args[0].name).toBe("action");
+			expect(methods[0].args[1].name).toBe("errorOrNil");
+		});
+	});
 });
