@@ -27,7 +27,7 @@ fs.writeFileSync("/path/to/project/ponies.json", output);
 @protocol Ponies, Foo;
 @interface BasicName : NSObject
 
-// Another stupid comment
+// Another comment
 @property(nonatomic, readonly) uninteresting<IgnorePlease> matcher;
 
 
