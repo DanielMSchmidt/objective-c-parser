@@ -35,11 +35,11 @@
 	"files": ["index.js", "README.md"],
 	"keywords": ["objective-c", "parser"],
 	"devDependencies": {
-		"coveralls": "^3.0.0",
+		"coveralls": "3.0.1",
 		"husky": "0.14.3",
-		"jest": "^22.4.0",
+		"jest": "22.4.4",
 		"lint-staged": "7.1.0",
-		"nyc": "^11.4.1",
+		"nyc": "11.8.0",
 		"prettier": "1.12.1"
 	},
 	"nyc": {
