@@ -6,6 +6,13 @@ function loadFile(name) {
 }
 
 describe("objective-c-parser", () => {
+	describe("empty file", () => {
+		const empty = loadFile("empty");
+		it("should return an empty list of methods for an empty header file", () => {
+			expect(objcToJs(empty).methods).toEqual([]);
+		});
+	});
+
 	describe("basic example", () => {
 		const basic = loadFile("basic");
 		it("should return name of basic example", () => {
