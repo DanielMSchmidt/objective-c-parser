@@ -64,8 +64,9 @@ function extractNameOfMethodWithoutArguments(methodBody, rawArgs) {
 
 const parseMethods = file => {
 	const lines = file.split("\n");
+  	const methodDeclarations = file.match(methodDeclarationRegex) || [];
 
-	return file.match(methodDeclarationRegex).map(methodDeclaration => {
+	return methodDeclarations.map(methodDeclaration => {
 		const returnType = methodDeclaration.match(matchReturnType);
 
 		const methodBody = methodDeclaration
