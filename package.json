@@ -18,7 +18,7 @@
 	"author": {
 		"name": "Daniel Schmidt",
 		"email": "danielmschmidt92@gmail.com",
-		"url": "danielmschmidt.de"
+		"url": "http://danielmschmidt.de"
 	},
 	"engines": {
 		"node": ">=4"
