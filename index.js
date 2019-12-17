@@ -1,7 +1,9 @@
 "use strict";
-const methodDeclarationRegex = /(?:\+|\-)\s?\(((?:\w|\<|\>)*)\)(?:\w|\s|\<|\>|\:|\(|\)|\*)*(;|{)/g;
-const matchReturnType = /(?:\+|\-)\s?\(((?:\w|\<|\>)*)\)/;
-const argumentsRegex = /\s?\(((?:\w|\s|\*|\<|\>)*)\)((?:\w)*)\s?/g;
+
+const methodDeclarationRegex = /(?<!\s\*\s)(?:\+|\-)\s?\(((?:\s|\w|\<|\>|\*)*)\)(?:\w|\s|\<|\>|\:|\(|\)|\*|\_|\-|\"|\[|\]|\^)*(__attribute__\(.*\))?(;|{)/g;
+const returnTypeRegex = /(?:\+|\-)\s?\(((?:\s|\w|\<|\>|\*)*)\)/;
+const argumentsRegex = /\s?\(((?:\w|\s|\*|\<|\>|\^|\(|\))*)\)\s*((?:\w)*)\s?/g;
+const commentRegex = /(?:^|\s)\/\/(.+?)$|\/\*(.*?)\*\//gms;
 
 // Get Groups for matches
 function getNthGroupForMatch(string, regex, index) {
@@ -21,25 +23,34 @@ const parseClassName = file => {
 
 const extractMultiLineComment = (lineIndex, lines) => {
 	let i = lineIndex;
+	let commentFound = false;
 	const commentLines = [];
 
 	while (i > 0) {
 		i--;
 
-		// is start of multi line string
-		if (lines[i].indexOf("/**") !== -1) {
-			return commentLines.join("\n");
-		}
-
 		// is end of multiline string
 		if (lines[i].indexOf("*/") !== -1) {
+			commentFound = true;
 			continue;
 		}
 
-		// is comment line
-		if (lines[i].indexOf("*") !== -1) {
-			commentLines.unshift(lines[i].replace(/\s*\*\s*/, ""));
+		// is start of multi line string
+		if (lines[i].indexOf("/**") !== -1 && commentFound) {
+			return commentLines.join("\n");
 		}
+
+		// is comment line start with star symbol
+		if (lines[i].indexOf("*") !== -1 && commentFound) {
+			commentLines.unshift(lines[i].replace(/^\s*\*\s*/, ""));
+		}
+
+		// No comment found
+		if (lines[i].trim() !== "" && !commentFound) {
+			break;
+		}
+
+		// FIXME: now, not parse the comment line without start with star symbol
 	}
 
 	// No comment found
@@ -49,7 +60,7 @@ const extractMultiLineComment = (lineIndex, lines) => {
 function extractNameOfMethodWithArguments(methodBody, rawArgs) {
 	const lastArgument = rawArgs[1][rawArgs[1].length - 1];
 	const indexOfLastArgumentEnd =
-		methodBody.indexOf(lastArgument) + lastArgument.length + 1;
+		methodBody.lastIndexOf(lastArgument) + lastArgument.length + 1;
 	return methodBody
 		.substr(0, indexOfLastArgumentEnd)
 		.replace(argumentsRegex, "")
@@ -59,18 +70,21 @@ function extractNameOfMethodWithArguments(methodBody, rawArgs) {
 }
 
 function extractNameOfMethodWithoutArguments(methodBody, rawArgs) {
-	return methodBody.replace(/\s*\{/g, "");
+	return methodBody.replace(/\s*\{?/g, "");
 }
 
 const parseMethods = file => {
 	const lines = file.split("\n");
-  	const methodDeclarations = file.match(methodDeclarationRegex) || [];
+	const stripedFile = file.replace(commentRegex, "");
+	const methodDeclarations = stripedFile.match(methodDeclarationRegex) || [];
 
 	return methodDeclarations.map(methodDeclaration => {
-		const returnType = methodDeclaration.match(matchReturnType);
+		const returnType = methodDeclaration.match(returnTypeRegex);
 
 		const methodBody = methodDeclaration
 			.replace(returnType[0], "")
+			.replace(/__attribute__\(.*\)/g, "")
+			.replace(/NS_AVAILABLE_IOS\(.*\)/g, "")
 			.replace(";", "");
 
 		const rawArgs = [
@@ -86,12 +100,19 @@ const parseMethods = file => {
 
 		const firstMethodLine = methodDeclaration.split("\n")[0];
 		const lineIndex = lines.findIndex(line => {
-			return firstMethodLine === line;
+			return firstMethodLine === line.replace(/^\s+/g, "");
 		});
 
-		const isSingleLineComment = lines[lineIndex - 1].indexOf("//") != -1;
+		const isSingleLineComment = lines[lineIndex - 1].indexOf("//") !== -1;
+		const isSingleLineCommentInMultiLineCommentFormat =
+			lines[lineIndex - 1].indexOf("/**") !== -1 &&
+			lines[lineIndex - 1].lastIndexOf("*/") !== -1;
 		const comment = isSingleLineComment
 			? lines[lineIndex - 1].replace(/\/\/(?:\s)*/, "")
+			: isSingleLineCommentInMultiLineCommentFormat
+			? lines[lineIndex - 1]
+					.replace(/\/\*\*(?:\s)*/, "")
+					.replace(/(?:\s)*\*+\//, "")
 			: extractMultiLineComment(lineIndex, lines);
 
 		const [argumentTypes, argumentNames] = rawArgs;
