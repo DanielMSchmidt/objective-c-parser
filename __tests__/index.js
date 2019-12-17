@@ -19,10 +19,10 @@ describe("objective-c-parser", () => {
 			expect(objcToJs(basic).name).toBe("BasicName");
 		});
 
-		it("should return three methods for basic example", () => {
+		it("should return seven methods for basic example", () => {
 			const methods = objcToJs(basic).methods;
 			expect(methods).toBeInstanceOf(Array);
-			expect(methods.length).toBe(3);
+			expect(methods.length).toBe(7);
 
 			expect(methods[0].args.length).toBe(0);
 			expect(methods[0].name).toBe("basicMethodOne");
@@ -31,24 +31,69 @@ describe("objective-c-parser", () => {
 				"This is the comment of basic method one"
 			);
 
-			expect(methods[1].name).toBe("basicMethodTwoWithArgOne:AndArgTwo:");
-			expect(methods[1].returnType).toBe("NSString");
+			expect(methods[1].name).toBe("basicMethodTwoWithArgOne:");
+			expect(methods[1].returnType).toBe("NSString *");
 			expect(methods[1].comment).toBe(`This is the comment of basic method two.
-It has multiple lines`);
+It has multiple lines
+Example:
+- (NSString *)basicMethodTwoWithArgOne:(NSInteger)argOne;`);
 
-			expect(methods[1].args.length).toBe(2);
+			expect(methods[1].args.length).toBe(1);
 			expect(methods[1].args[0].type).toBe("NSInteger");
 			expect(methods[1].args[0].name).toBe("argOne");
 
-			expect(methods[1].args[1].type).toBe("NSString");
-			expect(methods[1].args[1].name).toBe("argTwo");
+			expect(methods[2].name).toBe("basicMethodThreeWithArgOne:AndArgTwo:");
+			expect(methods[2].returnType).toBe("NSString *");
+			expect(methods[2].comment)
+				.toBe(`This is the comment of basic method three.
+It has multiple lines`);
+
+			expect(methods[2].args.length).toBe(2);
+			expect(methods[2].args[0].type).toBe("NSInteger");
+			expect(methods[2].args[0].name).toBe("argOne");
+
+			expect(methods[2].args[1].type).toBe("NSString *");
+			expect(methods[2].args[1].name).toBe("argTwo");
+
+			expect(methods[5].name).toBe("argOneMethod:");
+			expect(methods[5].returnType).toBe("NSString *");
+			expect(methods[5].comment).toBe("");
+			expect(methods[5].args.length).toBe(1);
+			expect(methods[5].args[0].type).toBe("NSInteger");
+			expect(methods[5].args[0].name).toBe("argOne");
+
+			expect(methods[6].name).toBe("argOneMethodTwo:");
+			expect(methods[6].returnType).toBe("NSString *");
+			expect(methods[6].comment).toBe(
+				"This is the comment of multiple lines in one line"
+			);
+			expect(methods[6].args.length).toBe(1);
+			expect(methods[6].args[0].type).toBe("NSInteger");
+			expect(methods[6].args[0].name).toBe("argOne");
 		});
 
 		it("should be able to detect static methods", () => {
 			const methods = objcToJs(basic).methods;
 			expect(methods[0].static).toBe(false);
 			expect(methods[1].static).toBe(false);
-			expect(methods[2].static).toBe(true);
+			expect(methods[2].static).toBe(false);
+			expect(methods[3].static).toBe(true);
+			expect(methods[4].static).toBe(true);
+			expect(methods[5].static).toBe(true);
+			expect(methods[6].static).toBe(true);
+		});
+
+		it("should be able to detect method with block arguments", () => {
+			const methods = objcToJs(basic).methods;
+			expect(methods[4].name).toBe("basicStaticMethodTwo:");
+			expect(methods[4].returnType).toBe("void");
+			expect(methods[4].comment).toBe(
+				`This is the comment of basic method five with block arguments`
+			);
+
+			expect(methods[4].args.length).toBe(1);
+			expect(methods[4].args[0].type).toBe("nonnull void(^)(void)");
+			expect(methods[4].args[0].name).toBe("argOne");
 		});
 	});
 
@@ -119,7 +164,7 @@ It has multiple lines`);
 
 		it("should return every method", () => {
 			const { methods } = objcToJs(withImplementation);
-			expect(methods.length).toBe(14); // actually 17, but we don't need the last 3 regex is hard
+			expect(methods.length).toBe(17);
 			expect(methods.map(m => m.name)).toEqual(
 				expect.arrayContaining([
 					"initWithElementMatcher:",
@@ -135,7 +180,9 @@ It has multiple lines`);
 					"usingSearchAction:onElementWithMatcher:",
 					"grey_uniqueElementInMatchedElements:andError:",
 					"grey_handleFailureOfAction:actionError:userProvidedOutError:",
-					"grey_handleFailureOfAssertion:assertionError:userProvidedOutError:"
+					"grey_handleFailureOfAssertion:assertionError:userProvidedOutError:",
+					"grey_errorForMultipleMatchingElements:withMatchedElementsIndexOutOfBounds:",
+					"grey_searchActionDescription"
 				])
 			);
 		});

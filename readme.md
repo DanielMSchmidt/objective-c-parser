@@ -13,11 +13,11 @@ $ npm install objective-c-parser
 ```js
 const fs = require("fs");
 const objectiveCParser = require("objective-c-parser");
-const content = fs.readFileSync("/path/to/objective-c/Ponies.h");
+const content = fs.readFileSync("/path/to/objective-c/Ponies.h", "utf8");
 
 const output = objectiveCParser(content);
 
-fs.writeFileSync("/path/to/project/ponies.json", output);
+fs.writeFileSync("/path/to/project/ponies.json", JSON.stringify(output));
 ```
 
 ## Example
@@ -38,7 +38,7 @@ fs.writeFileSync("/path/to/project/ponies.json", output);
  *  This is the comment of basic method two.
  *  It has multiple lines
  */
-- (NSString) basicMethodTwoWithArgOne:(NSInteger)argOne AndArgTwo:(NSString)argTwo;
+- (NSString *) basicMethodTwoWithArgOne:(NSInteger)argOne AndArgTwo:(NSString *)argTwo;
 @end
 ```
 
@@ -63,8 +63,7 @@ fs.writeFileSync("/path/to/project/ponies.json", output);
 					"name": "argTwo"
 				}
 			],
-			"comment":
-				"This is the comment of basic method two.\nIt has multiple lines",
+			"comment": "This is the comment of basic method two.\nIt has multiple lines",
 			"name": "basicMethodTwoWithArgOneAndArgTwo",
 			"returnType": "NSString"
 		}
