@@ -1883,9 +1883,9 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
-husky@4.0.5:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-4.0.5.tgz#c089bc249585b7c6ba54542e13b570402bae8d6f"
+husky@4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-4.0.6.tgz#b64206220ab940f091cb5f1c75672453eb39fc9f"
   dependencies:
     chalk "^3.0.0"
     ci-info "^2.0.0"
