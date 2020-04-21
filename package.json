@@ -48,7 +48,7 @@
 		"jest": "25.4.0",
 		"lint-staged": "10.1.7",
 		"nyc": "15.0.1",
-		"prettier": "2.0.4"
+		"prettier": "2.0.5"
 	},
 	"nyc": {
 		"reporter": [
