@@ -2437,10 +2437,10 @@ pkg-dir@^4.1.0, pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-prettier@3.2.0:
-  version "3.2.0"
-  resolved "https://registry.npmjs.org/prettier/-/prettier-3.2.0.tgz"
-  integrity sha512-/vBUecTGaPlRVwyZVROVC58bYIScqaoEJzZmzQXXrZOzqn0TwWz0EnOozOlFO/YAImRnb7XsKpTCd3m1SjS2Ww==
+prettier@3.2.1:
+  version "3.2.1"
+  resolved "https://registry.npmjs.org/prettier/-/prettier-3.2.1.tgz"
+  integrity sha512-qSUWshj1IobVbKc226Gw2pync27t0Kf0EdufZa9j7uBSJay1CC+B3K5lAAZoqgX3ASiKuWsk6OmzKRetXNObWg==
 
 pretty-format@^29.7.0:
   version "29.7.0"
