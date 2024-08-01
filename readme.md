@@ -25,10 +25,10 @@ fs.writeFileSync("/path/to/project/ponies.json", JSON.stringify(output));
 ```objective-c
 #import <Foundation/Foundation.h>
 @protocol Ponies, Foo;
-@interface BasicName : NSObject
+@interface BasicName : NSObject <Ponies, Foo>
 
 // Another comment
-@property(nonatomic, readonly) uninteresting<IgnorePlease> matcher;
+@property(nonatomic, readonly) NSArray<NSString *> titles;
 
 
 // This is the comment of basic method one
@@ -45,6 +45,15 @@ fs.writeFileSync("/path/to/project/ponies.json", JSON.stringify(output));
 ```json
 {
 	"name": "BasicName",
+	"superclass": "NSObject",
+	"protocols": ["Ponies", "Foo"],
+	"properties": [
+		{
+			"attributes": ["nonatomic", "readonly"],
+			"name": "titles",
+			"type": "NSArray<NSString *>"
+		}
+	],
 	"methods": [
 		{
 			"args": [],

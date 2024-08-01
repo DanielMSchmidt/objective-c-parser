@@ -1,9 +1,11 @@
 "use strict";
 
+const interfaceDeclarationRegex = /@interface ([\w\d]+)\s?:\s?([\w\d]+)\s?(?:<((?:[\w]+(?:,\s)?)+)>)?/g;
 const methodDeclarationRegex = /(?<!\s\*\s)(?:\+|\-)\s?\(((?:\s|\w|\<|\>|\*)*)\)(?:\w|\s|\<|\>|\:|\(|\)|\*|\_|\-|\"|\[|\]|\^)*(__attribute__\(.*\))?(;|{)/g;
 const returnTypeRegex = /(?:\+|\-)\s?\(((?:\s|\w|\<|\>|\*)*)\)/;
 const argumentsRegex = /\s?\(((?:\w|\s|\*|\<|\>|\^|\(|\))*)\)\s*((?:\w)*)\s?/g;
 const commentRegex = /(?:^|\s)\/\/(.+?)$|\/\*(.*?)\*\//gms;
+const propertyDeclarationRegex = /(?:@property)\s?\(([\w,\s]+)\)\s?([\w\d]+(?:\s?\<[\w\d]+\s*\*?\>)?)\s*\*?\s*([\w\d]+);/g;
 
 // Get Groups for matches
 function getNthGroupForMatch(string, regex, index) {
@@ -19,6 +21,30 @@ const parseClassName = file => {
 	const nameRegex = /@interface \w*/i;
 	const nameRegexLength = 11;
 	return (file.match(nameRegex) || [""])[0].substr(nameRegexLength);
+};
+
+const parseInterfaceDeclaration = file => {
+	const regex = new RegExp(interfaceDeclarationRegex);
+	const matches = regex.exec(file);
+	
+	if (!matches) {
+		const name = parseClassName(file);
+		return {
+			name
+		};
+	}
+
+	const [_interface, name, superclass, comaSeparatedProtocols] = matches;
+	
+	const protocols = (comaSeparatedProtocols ?? '')
+			.split(",")
+			.map(protocol => protocol.trim());
+
+	return {
+		name,
+		superclass,
+		protocols,
+	};
 };
 
 const extractMultiLineComment = (lineIndex, lines) => {
@@ -103,14 +129,15 @@ const parseMethods = file => {
 			return firstMethodLine === line.replace(/^\s+/g, "");
 		});
 
-		const isSingleLineComment = lines[lineIndex - 1].indexOf("//") !== -1;
+		const previousLine = lines[lineIndex - 1] ?? "";
+		const isSingleLineComment = previousLine.indexOf("//") !== -1;
 		const isSingleLineCommentInMultiLineCommentFormat =
-			lines[lineIndex - 1].indexOf("/**") !== -1 &&
-			lines[lineIndex - 1].lastIndexOf("*/") !== -1;
+			previousLine.indexOf("/**") !== -1 &&
+			previousLine.lastIndexOf("*/") !== -1;
 		const comment = isSingleLineComment
-			? lines[lineIndex - 1].replace(/\/\/(?:\s)*/, "")
+			? previousLine.replace(/\/\/(?:\s)*/, "")
 			: isSingleLineCommentInMultiLineCommentFormat
-			? lines[lineIndex - 1]
+			? previousLine
 					.replace(/\/\*\*(?:\s)*/, "")
 					.replace(/(?:\s)*\*+\//, "")
 			: extractMultiLineComment(lineIndex, lines);
@@ -134,10 +161,39 @@ const parseMethods = file => {
 	});
 };
 
+const parseProperties = file => {
+  const propertyDeclarations = file.match(propertyDeclarationRegex) || [];
+	
+	return propertyDeclarations.map(propertyDeclaration => {
+		const regex = new RegExp(propertyDeclarationRegex);
+		const matches = regex.exec(propertyDeclaration);
+
+		if (!matches) {
+			return null;
+		}
+		const [_full, commaSeparatedAttributes, type, name] = matches;
+		const attributes = commaSeparatedAttributes
+			.split(",")
+			.map(attribute => attribute.trim());
+
+		return {
+			name, 
+			type, 
+			attributes
+		};
+	})
+	.filter(declaration => !!declaration);
+}
+
 const parse = file => {
+	const fileWithoutComments = file.replace(/\/\*[^]*?\*\//g, "");
+	const { name, superclass, protocols } = parseInterfaceDeclaration(file);
 	return {
-		name: parseClassName(file),
-		methods: parseMethods(file)
+		name,
+		superclass,
+		protocols,
+		methods: parseMethods(file),
+		properties: parseProperties(fileWithoutComments),
 	};
 };
 

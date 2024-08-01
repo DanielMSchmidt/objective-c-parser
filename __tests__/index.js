@@ -214,4 +214,72 @@ It has multiple lines`);
 			expect(methods[0].args[1].name).toBe("errorOrNil");
 		});
 	});
+
+	describe("withProperties", () => {
+		const withProperties = loadFile("withProperties");
+
+		it("should not fail with properties", () => {
+			expect(() => {
+				objcToJs(withProperties);
+			}).not.toThrow();
+		});
+
+		it("should extract all properties", () => {
+			const { properties } = objcToJs(withProperties);
+
+			const expectedProperties = [
+				{
+					name: "series",
+					type: "NSArray<NSString *>",
+					attributes: ["nonatomic", "readwrite"],
+				},
+				{
+					name: "colors",
+					type: "NSArray<UIColor*>",
+					attributes: ["nonatomic", "readwrite"],
+				},
+				{
+					name: "controllers",
+					type: "NSArray",
+					attributes: ["nonatomic", "readwrite"],
+				},
+				{
+					name: "title",
+					type: "NSString",
+					attributes: ["nonatomic", "readwrite"],
+				},
+				{
+					name: "isSet",
+					type: "NSNumber",
+					attributes: ["nonatomic", "readwrite"],
+				},
+			]
+
+			expect(properties).toStrictEqual(expectedProperties);
+		});
+
+	});
+
+	describe("withProtocols", () => {
+		const withProtocols = loadFile("withProtocols");
+
+		it("should not fail with protocols and superclass", () => {
+			expect(() => {
+				objcToJs(withProtocols);
+			}).not.toThrow();
+		});
+
+		it("should extract protocols", () => {
+			const { protocols } = objcToJs(withProtocols);
+
+			expect(protocols).toStrictEqual(["Nameable"]);
+		});
+
+		it("should extract superclass", () => {
+			const { superclass } = objcToJs(withProtocols);
+
+			expect(superclass).toBe("NSObject");
+		});
+
+	});
 });
